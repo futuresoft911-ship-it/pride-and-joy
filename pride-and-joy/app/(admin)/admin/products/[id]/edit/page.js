@@ -1,6 +1,8 @@
 import { getProductById } from "@/app/actions/products";
 import EditProductForm from "./EditProductForm";
 
+export const dynamic = "force-dynamic";
+
 export default async function EditProductPage({ params }) {
   const { id } = await params;
   const product = await getProductById(id);
