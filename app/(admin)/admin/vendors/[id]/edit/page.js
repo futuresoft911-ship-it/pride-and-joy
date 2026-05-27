@@ -2,6 +2,8 @@ import { prisma } from "@/lib/prisma";
 import { redirect } from "next/navigation";
 import { updateVendor } from "@/app/actions/admin";
 
+export const dynamic = "force-dynamic";
+
 export default async function ManageVendorPage({ params }) {
   const { id } = await params;
   const vendor = await prisma.vendor.findUnique({
