@@ -1,0 +1,20 @@
+{
+  "name": "pride-and-joy",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "@prisma/client": "^5.22.0",
+    "next": "16.2.6",
+    "react": "19.2.4",
+    "react-dom": "19.2.4"
+  },
+  "devDependencies": {
+    "dotenv": "^17.4.2",
+    "prisma": "^5.22.0"
+  }
+}
