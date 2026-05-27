@@ -121,3 +121,73 @@ export async function getRelatedProducts(productId, limit = 4) {
     return [];
   }
 }
+
+import { revalidatePath } from "next/cache";
+
+export async function deleteProduct(id) {
+  try {
+    // Delete associated variants first
+    await prisma.productVariant.deleteMany({ where: { productId: id } });
+    await prisma.product.delete({ where: { id } });
+    revalidatePath("/admin/products");
+    revalidatePath("/shop");
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting product:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function createProduct(formData) {
+  try {
+    const name = formData.get("name");
+    const description = formData.get("description");
+    const category = formData.get("category");
+    const price = parseFloat(formData.get("price"));
+    const stock = parseInt(formData.get("stock"));
+    const image = formData.get("image") || "/images/be-you-tee.png";
+    const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+    const product = await prisma.product.create({
+      data: {
+        name,
+        slug,
+        description,
+        category,
+        image,
+        tags: "New",
+        variants: {
+          create: [
+            { size: "M", color: "White", price, stock, sku: `${slug}-M-W` }
+          ]
+        }
+      }
+    });
+
+    revalidatePath("/admin/products");
+    revalidatePath("/shop");
+    return { success: true, product };
+  } catch (error) {
+    console.error("Error creating product:", error);
+    return { success: false, error: error.message };
+  }
+}
+
+export async function updateProduct(id, formData) {
+  try {
+    const name = formData.get("name");
+    const category = formData.get("category");
+
+    await prisma.product.update({
+      where: { id },
+      data: { name, category }
+    });
+
+    revalidatePath("/admin/products");
+    revalidatePath("/shop");
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating product:", error);
+    return { success: false, error: error.message };
+  }
+}

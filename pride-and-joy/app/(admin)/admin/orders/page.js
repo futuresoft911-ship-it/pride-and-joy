@@ -1,4 +1,5 @@
 import { getRecentOrders } from "@/app/actions/admin";
+import OrderActions from "./OrderActions";
 
 export const metadata = {
   title: "Orders Management | Pride & Joy Admin",
@@ -35,14 +36,13 @@ export default async function AdminOrders() {
                 <th>Customer</th>
                 <th>Total</th>
                 <th>Payment</th>
-                <th>Fulfillment</th>
                 <th>Actions</th>
               </tr>
             </thead>
             <tbody>
               {orders.length === 0 ? (
                 <tr>
-                  <td colSpan="7" style={{ textAlign: "center", padding: "2rem" }}>No orders found</td>
+                  <td colSpan="6" style={{ textAlign: "center", padding: "2rem" }}>No orders found</td>
                 </tr>
               ) : (
                 orders.map(order => (
@@ -52,12 +52,7 @@ export default async function AdminOrders() {
                     <td>{order.customer ? order.customer.name : "Guest"}</td>
                     <td><span style={{ fontWeight: 600 }}>${order.totalAmount.toFixed(2)}</span></td>
                     <td><span className="admin-badge admin-badge--success">Paid</span></td>
-                    <td>
-                      <span className={`admin-badge admin-badge--${order.status === 'PENDING' ? 'warning' : 'success'}`}>
-                        {order.status === 'PENDING' ? 'Unfulfilled' : order.status}
-                      </span>
-                    </td>
-                    <td><button className="admin-btn admin-btn-outline" style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem" }}>View</button></td>
+                    <td><OrderActions order={order} /></td>
                   </tr>
                 ))
               )}

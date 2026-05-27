@@ -66,3 +66,35 @@ export async function createOrder({ customerInfo, items, total }) {
     return { success: false, error: "Failed to create order" };
   }
 }
+
+import { revalidatePath } from "next/cache";
+
+export async function updateOrderStatus(id, newStatus) {
+  try {
+    await prisma.order.update({
+      where: { id },
+      data: { status: newStatus }
+    });
+    revalidatePath("/admin/orders");
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to update order:", error);
+    return { success: false, error: "Failed to update order status" };
+  }
+}
+
+export async function deleteOrder(id) {
+  try {
+    // Delete order items first
+    await prisma.orderItem.deleteMany({ where: { orderId: id } });
+    await prisma.order.delete({ where: { id } });
+    
+    revalidatePath("/admin/orders");
+    revalidatePath("/admin");
+    return { success: true };
+  } catch (error) {
+    console.error("Failed to delete order:", error);
+    return { success: false, error: "Failed to delete order" };
+  }
+}

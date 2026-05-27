@@ -1,5 +1,7 @@
 import { getProducts } from "@/app/actions/products";
 import Image from "next/image";
+import Link from "next/link";
+import ProductActions from "./ProductActions";
 
 export const metadata = {
   title: "Catalog Management | Pride & Joy Admin",
@@ -12,7 +14,7 @@ export default async function AdminProducts() {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
         <h1 className="admin-page-title" style={{ marginBottom: 0 }}>Catalog & Products</h1>
-        <button className="admin-btn admin-btn-primary">+ Add New Product</button>
+        <Link href="/admin/products/new" className="admin-btn admin-btn-primary" style={{ textDecoration: "none" }}>+ Add New Product</Link>
       </div>
 
       <div className="admin-card" style={{ padding: 0 }}>
@@ -60,7 +62,7 @@ export default async function AdminProducts() {
                     <td>{product.variants?.length || 0}</td>
                     <td><span style={{ color: stockStatus === 'danger' ? "#e63946" : stockStatus === 'warning' ? "#ff8c00" : "inherit", fontWeight: 600 }}>{stockLabel}</span></td>
                     <td>{product.vendor ? product.vendor.name : 'In-House'}</td>
-                    <td><button className="admin-btn admin-btn-outline" style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem" }}>Edit</button></td>
+                    <td><ProductActions productId={product.id} /></td>
                   </tr>
                 );
               })}
