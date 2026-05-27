@@ -1,4 +1,5 @@
 import { getCustomers } from "@/app/actions/admin";
+import CustomerActions from "./CustomerActions";
 
 export const metadata = {
   title: "Customers (CRM) | Pride & Joy Admin",
@@ -56,7 +57,7 @@ export default async function AdminCRM() {
                     <td><span style={{ fontWeight: 600 }}>${customer.totalSpend.toFixed(2)}</span></td>
                     <td>{new Date(customer.createdAt).toLocaleDateString()}</td>
                     <td>
-                      <button className="admin-btn admin-btn-outline" style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem" }}>View Profile</button>
+                      <CustomerActions customerId={customer.id} />
                     </td>
                   </tr>
                 ))

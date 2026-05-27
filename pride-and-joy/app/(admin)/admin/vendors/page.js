@@ -1,4 +1,6 @@
 import { getVendors } from "@/app/actions/admin";
+import Link from "next/link";
+import VendorActions from "./VendorActions";
 
 export const metadata = {
   title: "Vendor Management | Pride & Joy Admin",
@@ -11,7 +13,7 @@ export default async function AdminVendors() {
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
         <h1 className="admin-page-title" style={{ marginBottom: 0 }}>Vendors</h1>
-        <button className="admin-btn admin-btn-primary">+ Add New Vendor</button>
+        <Link href="/admin/vendors/new" className="admin-btn admin-btn-primary" style={{ textDecoration: "none" }}>+ Add New Vendor</Link>
       </div>
 
       <div className="admin-card" style={{ padding: 0 }}>
@@ -53,7 +55,7 @@ export default async function AdminVendors() {
                       <div>{vendor.user?.name || "Unknown"}</div>
                       <div style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>{vendor.user?.email || "N/A"}</div>
                     </td>
-                    <td><button className="admin-btn admin-btn-outline" style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem" }}>Manage</button></td>
+                    <td><VendorActions vendorId={vendor.id} /></td>
                   </tr>
                 ))
               )}

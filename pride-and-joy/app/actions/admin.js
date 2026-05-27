@@ -116,3 +116,74 @@ export async function getCustomers() {
     return [];
   }
 }
+
+import { revalidatePath } from "next/cache";
+
+export async function createVendor(formData) {
+  try {
+    const name = formData.get("name");
+    const email = formData.get("email");
+    const description = formData.get("description") || "No description provided";
+
+    // Create user first
+    const user = await prisma.user.create({
+      data: {
+        name,
+        email,
+        role: "VENDOR"
+      }
+    });
+
+    // Create vendor profile
+    await prisma.vendor.create({
+      data: {
+        name,
+        description,
+        userId: user.id
+      }
+    });
+
+    revalidatePath("/admin/vendors");
+    return { success: true };
+  } catch (error) {
+    console.error("Error creating vendor:", error);
+    return { success: false, error: "Failed to create vendor" };
+  }
+}
+
+export async function deleteVendor(id) {
+  try {
+    const vendor = await prisma.vendor.findUnique({ where: { id } });
+    if (!vendor) return { success: false, error: "Vendor not found" };
+
+    // Delete products associated with vendor
+    await prisma.product.updateMany({
+      where: { vendorId: id },
+      data: { vendorId: null }
+    });
+
+    await prisma.vendor.delete({ where: { id } });
+    await prisma.user.delete({ where: { id: vendor.userId } });
+
+    revalidatePath("/admin/vendors");
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting vendor:", error);
+    return { success: false, error: "Failed to delete vendor" };
+  }
+}
+
+export async function deleteCustomer(id) {
+  try {
+    // Delete orders first
+    await prisma.order.deleteMany({ where: { customerId: id } });
+    // Delete user
+    await prisma.user.delete({ where: { id } });
+
+    revalidatePath("/admin/crm");
+    return { success: true };
+  } catch (error) {
+    console.error("Error deleting customer:", error);
+    return { success: false, error: "Failed to delete customer" };
+  }
+}
