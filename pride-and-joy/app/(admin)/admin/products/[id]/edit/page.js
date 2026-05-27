@@ -2,7 +2,8 @@ import { getProductById } from "@/app/actions/products";
 import EditProductForm from "./EditProductForm";
 
 export default async function EditProductPage({ params }) {
-  const product = await getProductById(params.id);
+  const { id } = await params;
+  const product = await getProductById(id);
 
   if (!product) {
     return <div>Product not found</div>;

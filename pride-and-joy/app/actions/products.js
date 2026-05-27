@@ -145,8 +145,28 @@ export async function createProduct(formData) {
     const category = formData.get("category");
     const price = parseFloat(formData.get("price"));
     const stock = parseInt(formData.get("stock"));
-    const image = formData.get("image") || "/images/be-you-tee.png";
+    const image = formData.get("image") || "/images/placeholder.png";
+    const tags = formData.get("tags") || "New";
     const slug = name.toLowerCase().replace(/[^a-z0-9]+/g, '-');
+
+    const sizes = formData.getAll("sizes");
+    const colorsString = formData.get("colors");
+    const colors = colorsString ? colorsString.split(",").map(c => c.trim()).filter(Boolean) : ["Default"];
+    
+    if (sizes.length === 0) sizes.push("ONE_SIZE");
+
+    const variantData = [];
+    for (const size of sizes) {
+      for (const color of colors) {
+        variantData.push({
+          size,
+          color,
+          price,
+          stock,
+          sku: `${slug}-${size}-${color}`.substring(0, 30).toUpperCase().replace(/[^A-Z0-9-]/g, '-')
+        });
+      }
+    }
 
     const product = await prisma.product.create({
       data: {
@@ -155,11 +175,9 @@ export async function createProduct(formData) {
         description,
         category,
         image,
-        tags: "New",
+        tags,
         variants: {
-          create: [
-            { size: "M", color: "White", price, stock, sku: `${slug}-M-W` }
-          ]
+          create: variantData
         }
       }
     });
