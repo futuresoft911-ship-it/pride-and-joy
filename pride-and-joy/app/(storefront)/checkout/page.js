@@ -4,6 +4,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
+import { createOrder } from "@/app/actions/orders";
 
 export default function CheckoutPage() {
   const { items, cartTotal, clearCart } = useCart();
@@ -61,15 +62,26 @@ export default function CheckoutPage() {
     setStep(3);
   };
 
-  const placeOrder = () => {
+  const placeOrder = async () => {
     setIsPlacingOrder(true);
-    // Simulate API call
-    setTimeout(() => {
-      setIsPlacingOrder(false);
-      setOrderNumber(Math.floor(10000 + Math.random() * 90000).toString());
-      setIsSuccess(true);
-      clearCart();
-    }, 2000);
+    try {
+      const res = await createOrder({
+        customerInfo: shippingData,
+        items,
+        total
+      });
+      
+      if (res.success) {
+        setOrderNumber(res.orderNumber);
+        setIsSuccess(true);
+        clearCart();
+      } else {
+        alert("Failed to place order.");
+      }
+    } catch (e) {
+      alert("Error placing order.");
+    }
+    setIsPlacingOrder(false);
   };
 
   if (isSuccess) {

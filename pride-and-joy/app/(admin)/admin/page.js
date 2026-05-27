@@ -1,8 +1,12 @@
+import { getDashboardStats } from "@/app/actions/admin";
+
 export const metadata = {
   title: "Admin Dashboard | Pride & Joy",
 };
 
-export default function AdminDashboard() {
+export default async function AdminDashboard() {
+  const stats = await getDashboardStats();
+
   return (
     <div>
       <h1 className="admin-page-title">Dashboard</h1>
@@ -10,23 +14,23 @@ export default function AdminDashboard() {
       <div className="admin-grid">
         <div className="admin-card admin-stat">
           <span className="admin-stat-label">Total Revenue</span>
-          <span className="admin-stat-value">$124,500</span>
-          <span className="admin-stat-trend admin-stat-trend--up">↑ 12.5% from last month</span>
+          <span className="admin-stat-value">${stats.totalRevenue.toFixed(2)}</span>
+          <span className="admin-stat-trend admin-stat-trend--up">↑ live data</span>
         </div>
         <div className="admin-card admin-stat">
           <span className="admin-stat-label">Total Orders</span>
-          <span className="admin-stat-value">3,420</span>
-          <span className="admin-stat-trend admin-stat-trend--up">↑ 8.2% from last month</span>
+          <span className="admin-stat-value">{stats.totalOrders}</span>
+          <span className="admin-stat-trend admin-stat-trend--up">↑ live data</span>
         </div>
         <div className="admin-card admin-stat">
           <span className="admin-stat-label">Avg Order Value</span>
-          <span className="admin-stat-value">$36.40</span>
-          <span className="admin-stat-trend admin-stat-trend--down">↓ 1.1% from last month</span>
+          <span className="admin-stat-value">${stats.avgOrderValue.toFixed(2)}</span>
+          <span className="admin-stat-trend admin-stat-trend--down">↓ live data</span>
         </div>
         <div className="admin-card admin-stat">
           <span className="admin-stat-label">Active Vendors</span>
-          <span className="admin-stat-value">42</span>
-          <span className="admin-stat-trend admin-stat-trend--up">↑ 5 new this week</span>
+          <span className="admin-stat-value">{stats.activeVendors}</span>
+          <span className="admin-stat-trend admin-stat-trend--up">↑ live data</span>
         </div>
       </div>
 

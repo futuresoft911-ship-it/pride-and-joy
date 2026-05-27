@@ -1,8 +1,13 @@
+import { getProducts } from "@/app/actions/products";
+import Image from "next/image";
+
 export const metadata = {
   title: "Catalog Management | Pride & Joy Admin",
 };
 
-export default function AdminProducts() {
+export default async function AdminProducts() {
+  const products = await getProducts();
+
   return (
     <div>
       <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center", marginBottom: "1.5rem" }}>
@@ -15,9 +20,10 @@ export default function AdminProducts() {
           <input type="text" className="admin-input" placeholder="Search products by name, SKU, or tag..." style={{ maxWidth: "400px" }} />
           <select className="admin-input" style={{ width: "auto" }}>
             <option>All Categories</option>
-            <option>T-Shirts</option>
-            <option>Hoodies</option>
-            <option>Accessories</option>
+            <option>Best Sellers</option>
+            <option>Pride Collection</option>
+            <option>Sale</option>
+            <option>New Arrivals</option>
           </select>
         </div>
 
@@ -34,48 +40,30 @@ export default function AdminProducts() {
               </tr>
             </thead>
             <tbody>
-              <tr>
-                <td style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                  <div style={{ width: "40px", height: "40px", background: "#f0f0f0", borderRadius: "4px" }}></div>
-                  <div>
-                    <div style={{ fontWeight: 600 }}>Love Is Love Tee</div>
-                    <div style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>SKU: TEE-LIL-001</div>
-                  </div>
-                </td>
-                <td><span className="admin-badge admin-badge--success">Active</span></td>
-                <td>12 (S-2XL, 3 Colors)</td>
-                <td><span style={{ color: "#ff8c00", fontWeight: 600 }}>24 in stock</span></td>
-                <td>In-House</td>
-                <td><button className="admin-btn admin-btn-outline" style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem" }}>Edit</button></td>
-              </tr>
-              <tr>
-                <td style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                  <div style={{ width: "40px", height: "40px", background: "#f0f0f0", borderRadius: "4px" }}></div>
-                  <div>
-                    <div style={{ fontWeight: 600 }}>Trans Joy Hoodie</div>
-                    <div style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>SKU: HOOD-TJ-002</div>
-                  </div>
-                </td>
-                <td><span className="admin-badge admin-badge--success">Active</span></td>
-                <td>6 (S-XL, 2 Colors)</td>
-                <td><span style={{ color: "#e63946", fontWeight: 600 }}>Out of stock</span></td>
-                <td>Vendor: QueerThreads</td>
-                <td><button className="admin-btn admin-btn-outline" style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem" }}>Edit</button></td>
-              </tr>
-              <tr>
-                <td style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
-                  <div style={{ width: "40px", height: "40px", background: "#f0f0f0", borderRadius: "4px" }}></div>
-                  <div>
-                    <div style={{ fontWeight: 600 }}>Pride Flag Enamel Pin</div>
-                    <div style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>SKU: ACC-PIN-003</div>
-                  </div>
-                </td>
-                <td><span className="admin-badge admin-badge--warning">Draft</span></td>
-                <td>1 (One Size)</td>
-                <td>150 in stock</td>
-                <td>In-House</td>
-                <td><button className="admin-btn admin-btn-outline" style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem" }}>Edit</button></td>
-              </tr>
+              {products.map(product => {
+                const totalStock = product.variants?.reduce((sum, v) => sum + v.stock, 0) || 0;
+                const stockStatus = totalStock > 10 ? 'success' : totalStock > 0 ? 'warning' : 'danger';
+                const stockLabel = totalStock > 0 ? `${totalStock} in stock` : 'Out of stock';
+
+                return (
+                  <tr key={product.id}>
+                    <td style={{ display: "flex", alignItems: "center", gap: "1rem" }}>
+                      <div style={{ width: "40px", height: "40px", background: "#f0f0f0", borderRadius: "4px", overflow: "hidden", position: "relative" }}>
+                        <Image src={product.image} alt={product.name} fill style={{ objectFit: "cover" }} />
+                      </div>
+                      <div>
+                        <div style={{ fontWeight: 600 }}>{product.name}</div>
+                        <div style={{ fontSize: "0.85rem", color: "var(--text-muted)" }}>Category: {product.category}</div>
+                      </div>
+                    </td>
+                    <td><span className={`admin-badge admin-badge--${totalStock > 0 ? 'success' : 'danger'}`}>{totalStock > 0 ? 'Active' : 'Out of Stock'}</span></td>
+                    <td>{product.variants?.length || 0}</td>
+                    <td><span style={{ color: stockStatus === 'danger' ? "#e63946" : stockStatus === 'warning' ? "#ff8c00" : "inherit", fontWeight: 600 }}>{stockLabel}</span></td>
+                    <td>{product.vendor ? product.vendor.name : 'In-House'}</td>
+                    <td><button className="admin-btn admin-btn-outline" style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem" }}>Edit</button></td>
+                  </tr>
+                );
+              })}
             </tbody>
           </table>
         </div>

@@ -1,10 +1,10 @@
 'use client';
 
-import { useState, useCallback } from 'react';
+import { useState, useCallback, useEffect } from 'react';
 import { useParams } from 'next/navigation';
 import Image from 'next/image';
 import Link from 'next/link';
-import { products, getProductById, getRelatedProducts } from '@/data/products';
+import { getProductById, getRelatedProducts } from '@/app/actions/products';
 import ProductCard from '@/components/ProductCard';
 import { useCart } from '@/context/CartContext';
 
@@ -92,8 +92,11 @@ function ProductNotFound() {
 /* ── Main Product Detail Page ── */
 export default function ProductDetailPage() {
   const params = useParams();
-  const product = getProductById(params.id);
   const { addToCart } = useCart();
+
+  const [product, setProduct] = useState(null);
+  const [relatedProducts, setRelatedProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
 
   const [selectedSize, setSelectedSize] = useState('');
   const [selectedColor, setSelectedColor] = useState('');
@@ -103,11 +106,24 @@ export default function ProductDetailPage() {
   const [toastMessage, setToastMessage] = useState('');
   const [imageHover, setImageHover] = useState(false);
 
+  useEffect(() => {
+    async function loadData() {
+      const p = await getProductById(params.id);
+      setProduct(p);
+      if (p) {
+        const related = await getRelatedProducts(p.id, 4);
+        setRelatedProducts(related);
+        if (p.colors?.[0]?.name) {
+          setSelectedColor(p.colors[0].name);
+        }
+      }
+      setLoading(false);
+    }
+    loadData();
+  }, [params.id]);
+
   /* Auto-select first color when product loads */
   const firstColor = product?.colors?.[0]?.name || '';
-  if (product && !selectedColor && firstColor) {
-    /* Using a conditional set here — runs once synchronously during first render */
-  }
 
   const handleAddToCart = useCallback(() => {
     if (!product || !selectedSize) return;
@@ -126,12 +142,20 @@ export default function ProductDetailPage() {
     setQuantity((prev) => Math.min(10, prev + 1));
   }, []);
 
+  if (loading) {
+    return (
+      <main className="pdp" style={{ minHeight: '60vh', display: 'flex', alignItems: 'center', justifyContent: 'center' }}>
+        <div className="loader" style={{ width: '40px', height: '40px', border: '4px solid #f3f3f3', borderTop: '4px solid var(--accent)', borderRadius: '50%', animation: 'spin 1s linear infinite' }}></div>
+        <style>{`@keyframes spin { 0% { transform: rotate(0deg); } 100% { transform: rotate(360deg); } }`}</style>
+      </main>
+    );
+  }
+
   /* ── 404 state ── */
   if (!product) {
     return <ProductNotFound />;
   }
 
-  const relatedProducts = getRelatedProducts(params.id, 4);
   const discount = product.originalPrice
     ? Math.round(((product.originalPrice - product.price) / product.originalPrice) * 100)
     : null;

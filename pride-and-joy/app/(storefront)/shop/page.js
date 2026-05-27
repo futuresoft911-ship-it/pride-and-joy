@@ -2,7 +2,8 @@
 
 import { useState, useEffect, useRef, useMemo } from 'react';
 import Link from 'next/link';
-import { products, categories } from '@/data/products';
+import { products as staticProducts, categories } from '@/data/products';
+import { getProducts } from '@/app/actions/products';
 import ProductCard from '@/components/ProductCard';
 
 /* ─── Custom useInView hook ─── */
@@ -43,12 +44,21 @@ export default function ShopPage() {
   const [sortBy, setSortBy] = useState('featured');
   const [animating, setAnimating] = useState(false);
   const [gridRef, gridVisible] = useInView();
+  const [dbProducts, setDbProducts] = useState([]);
+  
+  useEffect(() => {
+    async function loadProducts() {
+      const data = await getProducts();
+      setDbProducts(data.length > 0 ? data : staticProducts);
+    }
+    loadProducts();
+  }, []);
 
   /* Filter & Sort */
   const filteredProducts = useMemo(() => {
     let result = activeCategory === 'All'
-      ? [...products]
-      : products.filter((p) => p.category === activeCategory);
+      ? [...dbProducts]
+      : dbProducts.filter((p) => p.category === activeCategory);
 
     switch (sortBy) {
       case 'price-asc':
@@ -60,7 +70,7 @@ export default function ShopPage() {
       case 'newest':
         result.sort((a, b) => {
           const order = { 'New': 0, 'Best Seller': 1, 'Sale': 2 };
-          return (order[a.badge] ?? 3) - (order[b.badge] ?? 3);
+          return (order[a.tags] ?? 3) - (order[b.tags] ?? 3);
         });
         break;
       default:
@@ -69,7 +79,7 @@ export default function ShopPage() {
     }
 
     return result;
-  }, [activeCategory, sortBy]);
+  }, [activeCategory, sortBy, dbProducts]);
 
   const handleCategoryChange = (category) => {
     if (category === activeCategory) return;
