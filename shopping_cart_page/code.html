@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+
+<html class="light" lang="en"><head>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>Shopping Cart Page</title>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com" rel="preconnect"/>
+<link crossorigin="" href="https://fonts.gstatic.com" rel="preconnect"/>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;700;800&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&amp;display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+    tailwind.config = {
+      darkMode: "class",
+      theme: {
+        extend: {
+          colors: {
+            "primary": "#f4258c",
+            "background-light": "#f8f5f7",
+            "background-dark": "#221019",
+          },
+          fontFamily: {
+            "display": ["Plus Jakarta Sans", "Noto Sans", "sans-serif"]
+          },
+          borderRadius: {
+            "DEFAULT": "1rem",
+            "lg": "2rem",
+            "xl": "3rem",
+            "full": "9999px"
+          },
+        },
+      },
+    }
+  </script>
+<style>
+    .material-symbols-outlined {
+      font-variation-settings: 'FILL' 0, 'wght' 400, 'GRAD' 0, 'opsz' 24;
+      font-size: 20px;
+    }
+  </style>
+</head>
+<body class="font-display">
+<div class="relative flex min-h-screen w-full flex-col bg-background-light dark:bg-background-dark group/design-root overflow-x-hidden">
+<div class="layout-container flex h-full grow flex-col">
+<header class="flex items-center justify-between whitespace-nowrap border-b border-solid border-primary/20 dark:border-primary/10 px-4 sm:px-6 lg:px-10 py-3">
+<div class="flex items-center gap-4 text-[#1c0d14] dark:text-gray-200">
+<div class="size-6 text-primary">
+<svg fill="none" viewbox="0 0 48 48" xmlns="http://www.w3.org/2000/svg">
+<path d="M4 42.4379C4 42.4379 14.0962 36.0744 24 41.1692C35.0664 46.8624 44 42.2078 44 42.2078L44 7.01134C44 7.01134 35.068 11.6577 24.0031 5.96913C14.0971 0.876274 4 7.27094 4 7.27094L4 42.4379Z" fill="currentColor"></path>
+</svg>
+</div>
+<h2 class="text-[#1c0d14] dark:text-gray-50 text-lg font-bold leading-tight tracking-[-0.015em]">Pride &amp; Joy</h2>
+</div>
+<div class="hidden md:flex items-center gap-9">
+<a class="text-[#1c0d14] dark:text-gray-300 dark:hover:text-white text-sm font-medium leading-normal" href="#">T-Shirts</a>
+<a class="text-[#1c0d14] dark:text-gray-300 dark:hover:text-white text-sm font-medium leading-normal" href="#">About</a>
+<a class="text-[#1c0d14] dark:text-gray-300 dark:hover:text-white text-sm font-medium leading-normal" href="#">Contact</a>
+</div>
+<div class="flex items-center gap-2">
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 bg-primary/20 dark:bg-primary/30 text-[#1c0d14] dark:text-gray-100 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<span class="material-symbols-outlined">favorite</span>
+</button>
+<button class="flex max-w-[480px] cursor-pointer items-center justify-center overflow-hidden rounded-full h-10 bg-primary/20 dark:bg-primary/30 text-[#1c0d14] dark:text-gray-100 gap-2 text-sm font-bold leading-normal tracking-[0.015em] min-w-0 px-2.5">
+<span class="material-symbols-outlined">person</span>
+</button>
+</div>
+</header>
+<main class="px-4 sm:px-6 lg:px-8 py-10 lg:py-16">
+<div class="mx-auto max-w-6xl">
+<div class="flex flex-wrap justify-between gap-4 pb-8">
+<div class="flex min-w-72 flex-col gap-3">
+<p class="text-[#1c0d14] dark:text-gray-50 text-4xl font-black leading-tight tracking-[-0.033em]">Your Cart</p>
+<p class="text-[#9c4973] dark:text-gray-400 text-base font-normal leading-normal">You have 3 items in your cart.</p>
+</div>
+</div>
+<div class="grid grid-cols-1 lg:grid-cols-3 gap-8 lg:gap-12">
+<div class="lg:col-span-2 flex flex-col gap-4">
+<div class="flex flex-col border border-primary/20 dark:border-primary/10 rounded-lg divide-y divide-primary/20 dark:divide-primary/10">
+<div class="flex gap-4 bg-background-light dark:bg-background-dark/50 px-4 py-3 justify-between rounded-t-lg">
+<div class="flex items-start gap-4 w-full">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[70px]" data-alt="Pride Flag T-shirt" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBq-Q61BLBpTGmAd1PkZGbXdX-xWSRHiA4jX87jGIcr9_SLxo_fLgxfJY6_Lh_Fni0GuQ4j0-csPD8YMPlZkNVJpIFzn1NNXLqWW8Ni-P7gDPpa2uPtHJdrHbAy04M7En7lRQ-4cmAdbl8zYsNEqE2rXBCadNcfQE0aq3-oUWwebBFfWgLEDDmjptAhVRdDhNdtlxL5YEuC08U3AudAFWwwi-8WFP2TzIB4ynJ9Kd9PYtBokg_Ds93PftYF4kTYwnc7T7rrYhHDyw");'></div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-[#1c0d14] dark:text-gray-50 text-base font-medium leading-normal">Pride Flag Tee</p>
+<p class="text-[#9c4973] dark:text-gray-400 text-sm font-normal leading-normal">$25.00</p>
+<p class="text-[#9c4973] dark:text-gray-400 text-sm font-normal leading-normal">Size: M</p>
+</div>
+</div>
+<div class="shrink-0 flex flex-col items-end justify-between">
+<div class="flex items-center gap-2 text-[#1c0d14] dark:text-gray-50">
+<button class="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 dark:bg-primary/30 cursor-pointer">-</button>
+<input class="text-base font-medium leading-normal w-4 p-0 text-center bg-transparent focus:outline-0 focus:ring-0 focus:border-none border-none [appearance:textfield] [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none" type="number" value="1"/>
+<button class="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 dark:bg-primary/30 cursor-pointer">+</button>
+</div>
+<button class="text-[#9c4973] dark:text-gray-400 dark:hover:text-primary hover:text-primary text-sm flex items-center gap-1 mt-2">
+<span class="material-symbols-outlined" style="font-size: 16px;">delete</span>Remove
+                    </button>
+</div>
+</div>
+<div class="flex gap-4 bg-background-light dark:bg-background-dark/50 px-4 py-3 justify-between">
+<div class="flex items-start gap-4 w-full">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[70px]" data-alt="Love is Love T-shirt" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuCXLxkP9epf6Jhw9ZFQvBYpmvv39MH28Vjn57sOrd05_Cu_R2o_DvSxrSHMms68-klyNxpkUP6beiIphD83nyQIr_3bfof9lcbyZTSESyYtQiMVjc-apXOYPGg82cvSeS4w3h0r7UlU-l7gDDfQWW0JZoTxYmhrZcqpDW2qpYf_QlVYHccdATfnH4oAbOmoQCpy2fuF9-awb-biHBkI1kE2RRJS-ma9Nhw6Lckwa_xJdHBby2cIB2SMadijIaLN_jyeJFYLya8cHA");'></div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-[#1c0d14] dark:text-gray-50 text-base font-medium leading-normal">Love is Love Tee</p>
+<p class="text-[#9c4973] dark:text-gray-400 text-sm font-normal leading-normal">$25.00</p>
+<p class="text-[#9c4973] dark:text-gray-400 text-sm font-normal leading-normal">Size: L</p>
+</div>
+</div>
+<div class="shrink-0 flex flex-col items-end justify-between">
+<div class="flex items-center gap-2 text-[#1c0d14] dark:text-gray-50">
+<button class="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 dark:bg-primary/30 cursor-pointer">-</button>
+<input class="text-base font-medium leading-normal w-4 p-0 text-center bg-transparent focus:outline-0 focus:ring-0 focus:border-none border-none [appearance:textfield] [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none" type="number" value="2"/>
+<button class="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 dark:bg-primary/30 cursor-pointer">+</button>
+</div>
+<button class="text-[#9c4973] dark:text-gray-400 dark:hover:text-primary hover:text-primary text-sm flex items-center gap-1 mt-2">
+<span class="material-symbols-outlined" style="font-size: 16px;">delete</span>Remove
+                    </button>
+</div>
+</div>
+<div class="flex gap-4 bg-background-light dark:bg-background-dark/50 px-4 py-3 justify-between rounded-b-lg">
+<div class="flex items-start gap-4 w-full">
+<div class="bg-center bg-no-repeat aspect-square bg-cover rounded-lg size-[70px]" data-alt="Trans Rights T-shirt" style='background-image: url("https://lh3.googleusercontent.com/aida-public/AB6AXuBuGwt53mw1Peoj2Pqywlf-oEEd-fwZ0kr_sFlMmMQHa_EJrtd96Zd_RPFBgOsndnXVjO39EyVb-jIDuUSUw0cam8chqXwI5rIMBzauLQuoO5e5vGmPVRFsufnUZvp6YuVsU2UgMhr0jEPV78V5bg_ZO2GB5pa_rro7BLSXhk2tMH52keM2wY1KYKQYx22E5Vs9ykD1o4ieAv4MvBoIHyL9mbcCzpzRKNlvgUvPDqoNWUK9E2fAM7Nxj-GXuI4-H_fit20sdvtefg");'></div>
+<div class="flex flex-1 flex-col justify-center">
+<p class="text-[#1c0d14] dark:text-gray-50 text-base font-medium leading-normal">Trans Rights Tee</p>
+<p class="text-[#9c4973] dark:text-gray-400 text-sm font-normal leading-normal">$25.00</p>
+<p class="text-[#9c4973] dark:text-gray-400 text-sm font-normal leading-normal">Size: XL</p>
+</div>
+</div>
+<div class="shrink-0 flex flex-col items-end justify-between">
+<div class="flex items-center gap-2 text-[#1c0d14] dark:text-gray-50">
+<button class="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 dark:bg-primary/30 cursor-pointer">-</button>
+<input class="text-base font-medium leading-normal w-4 p-0 text-center bg-transparent focus:outline-0 focus:ring-0 focus:border-none border-none [appearance:textfield] [&amp;::-webkit-inner-spin-button]:appearance-none [&amp;::-webkit-outer-spin-button]:appearance-none" type="number" value="1"/>
+<button class="text-base font-medium leading-normal flex h-7 w-7 items-center justify-center rounded-full bg-primary/20 dark:bg-primary/30 cursor-pointer">+</button>
+</div>
+<button class="text-[#9c4973] dark:text-gray-400 dark:hover:text-primary hover:text-primary text-sm flex items-center gap-1 mt-2">
+<span class="material-symbols-outlined" style="font-size: 16px;">delete</span>Remove
+                    </button>
+</div>
+</div>
+</div>
+<a class="flex items-center gap-2 text-primary dark:text-primary/90 hover:underline font-bold text-sm" href="#">
+<span class="material-symbols-outlined">arrow_back</span>
+                Continue Shopping
+              </a>
+</div>
+<div class="lg:col-span-1">
+<div class="sticky top-10 flex flex-col gap-6 p-6 bg-white dark:bg-background-dark/50 border border-primary/20 dark:border-primary/10 rounded-lg shadow-sm">
+<h3 class="text-xl font-bold text-[#1c0d14] dark:text-gray-50">Order Summary</h3>
+<div class="space-y-3">
+<div class="flex justify-between text-sm text-[#9c4973] dark:text-gray-400">
+<span>Subtotal (4 items)</span>
+<span>$100.00</span>
+</div>
+<div class="flex justify-between text-sm text-[#9c4973] dark:text-gray-400">
+<span>Shipping</span>
+<span>Calculated at next step</span>
+</div>
+<div class="flex justify-between text-sm text-[#9c4973] dark:text-gray-400">
+<span>Taxes</span>
+<span>Calculated at next step</span>
+</div>
+</div>
+<div class="border-t border-primary/20 dark:border-primary/10 pt-4">
+<div class="flex justify-between font-bold text-[#1c0d14] dark:text-gray-50">
+<span>Estimated Total</span>
+<span>$100.00</span>
+</div>
+</div>
+<button class="w-full flex items-center justify-center rounded-full h-12 px-6 bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 text-white text-base font-bold leading-normal tracking-wide shadow-lg hover:shadow-xl transition-shadow">
+                        Proceed to Checkout
+                    </button>
+</div>
+</div>
+</div>
+</div>
+</main>
+</div>
+</div>
+</body></html>
