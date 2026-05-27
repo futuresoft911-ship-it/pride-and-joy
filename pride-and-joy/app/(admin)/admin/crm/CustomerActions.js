@@ -2,6 +2,7 @@
 
 import { useState } from "react";
 import { deleteCustomer } from "@/app/actions/admin";
+import Link from "next/link";
 
 export default function CustomerActions({ customerId }) {
   const [isDeleting, setIsDeleting] = useState(false);
@@ -19,13 +20,13 @@ export default function CustomerActions({ customerId }) {
 
   return (
     <div style={{ display: "flex", gap: "0.5rem" }}>
-      <button 
-        onClick={() => alert("Customer Profile view not implemented yet.")}
+      <Link 
+        href={`/admin/crm/${customerId}`}
         className="admin-btn admin-btn-outline" 
-        style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem" }}
+        style={{ padding: "0.4rem 0.8rem", fontSize: "0.8rem", textDecoration: "none" }}
       >
         View Profile
-      </button>
+      </Link>
       <button 
         onClick={handleDelete} 
         disabled={isDeleting} 

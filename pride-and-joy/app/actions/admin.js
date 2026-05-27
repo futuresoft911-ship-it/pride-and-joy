@@ -123,22 +123,30 @@ export async function createVendor(formData) {
   try {
     const name = formData.get("name");
     const email = formData.get("email");
-    const description = formData.get("description") || "No description provided";
 
-    // Create user first
-    const user = await prisma.user.create({
-      data: {
-        name,
-        email,
-        role: "VENDOR"
-      }
-    });
+    // Check if user exists
+    let user = await prisma.user.findUnique({ where: { email } });
+    
+    if (!user) {
+      user = await prisma.user.create({
+        data: {
+          name,
+          email,
+          role: "VENDOR"
+        }
+      });
+    } else {
+      // Update role if user already exists
+      await prisma.user.update({
+        where: { email },
+        data: { role: "VENDOR" }
+      });
+    }
 
     // Create vendor profile
     await prisma.vendor.create({
       data: {
         name,
-        description,
         userId: user.id
       }
     });
@@ -148,6 +156,25 @@ export async function createVendor(formData) {
   } catch (error) {
     console.error("Error creating vendor:", error);
     return { success: false, error: "Failed to create vendor" };
+  }
+}
+
+export async function updateVendor(formData) {
+  try {
+    const id = formData.get("id");
+    const name = formData.get("name");
+    const commissionRate = parseFloat(formData.get("commissionRate"));
+
+    await prisma.vendor.update({
+      where: { id },
+      data: { name, commissionRate }
+    });
+
+    revalidatePath("/admin/vendors");
+    return { success: true };
+  } catch (error) {
+    console.error("Error updating vendor:", error);
+    return { success: false, error: "Failed to update vendor" };
   }
 }
 
