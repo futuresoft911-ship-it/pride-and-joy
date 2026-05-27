@@ -1,11 +1,6 @@
 import { Plus_Jakarta_Sans } from "next/font/google";
 import "./globals.css";
 import "./missing-styles.css";
-import { CartProvider } from "@/context/CartContext";
-import Header from "@/components/Header";
-import Footer from "@/components/Footer";
-import CartDrawer from "@/components/CartDrawer";
-import Toast from "@/components/Toast";
 
 const plusJakartaSans = Plus_Jakarta_Sans({
   weights: [400, 500, 600, 700, 800],
@@ -69,14 +64,8 @@ export default function RootLayout({ children }) {
       <head>
         <script dangerouslySetInnerHTML={{ __html: themeInitScript }} />
       </head>
-      <body className="app">
-        <CartProvider>
-          <Header />
-          <main id="main-content">{children}</main>
-          <Footer />
-          <CartDrawer />
-          <Toast />
-        </CartProvider>
+      <body>
+        {children}
       </body>
     </html>
   );
