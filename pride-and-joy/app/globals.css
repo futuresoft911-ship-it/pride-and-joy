@@ -188,6 +188,7 @@ img {
   box-shadow: 0 4px 15px rgba(244, 37, 140, 0.35);
   position: relative;
   overflow: hidden;
+  z-index: 1;
 }
 
 .btn-rainbow::before {
@@ -197,6 +198,7 @@ img {
   background: var(--gradient-pride);
   opacity: 0;
   transition: opacity 0.3s;
+  z-index: -1;
 }
 
 .btn-rainbow:hover::before {
@@ -206,12 +208,6 @@ img {
 .btn-rainbow:hover {
   transform: translateY(-2px);
   box-shadow: 0 8px 25px rgba(244, 37, 140, 0.45);
-}
-
-.btn-rainbow span,
-.btn-rainbow svg {
-  position: relative;
-  z-index: 1;
 }
 
 .btn-outline {
