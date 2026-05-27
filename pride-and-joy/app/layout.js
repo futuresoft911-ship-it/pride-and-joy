@@ -71,9 +71,6 @@ export default function RootLayout({ children }) {
       </head>
       <body className="app">
         <CartProvider>
-          <a href="#main-content" className="skip-to-content">
-            Skip to main content
-          </a>
           <Header />
           <main id="main-content">{children}</main>
           <Footer />

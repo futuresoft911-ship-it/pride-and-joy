@@ -27,6 +27,13 @@ export default function CartDrawer() {
 
   const closeCart = useCallback(() => setIsCartOpen(false), [setIsCartOpen]);
 
+  /* ─── Open Cart Event Listener ─── */
+  useEffect(() => {
+    const handleOpenCart = () => setIsCartOpen(true);
+    window.addEventListener("open-cart-drawer", handleOpenCart);
+    return () => window.removeEventListener("open-cart-drawer", handleOpenCart);
+  }, [setIsCartOpen]);
+
   /* ─── Focus Trap ─── */
   const trapFocus = useCallback((e) => {
     if (e.key !== 'Tab' || !drawerRef.current) return;
