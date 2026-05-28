@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useState } from "react";
 import { useCart } from "@/context/CartContext";
 import { createOrder } from "@/app/actions/orders";
+import PayPalButtonPlaceholder from "@/components/checkout/PayPalButtonPlaceholder";
+import StripePlaceholder from "@/components/checkout/StripePlaceholder";
 
 export default function CheckoutPage() {
   const { items, cartTotal, clearCart } = useCart();
@@ -18,6 +20,7 @@ export default function CheckoutPage() {
   const [isSuccess, setIsSuccess] = useState(false);
   const [orderNumber, setOrderNumber] = useState("");
   const [isPlacingOrder, setIsPlacingOrder] = useState(false);
+  const [paymentGateway, setPaymentGateway] = useState("paypal"); // default to paypal
   
   const [shippingData, setShippingData] = useState({
     fullName: "",
@@ -68,7 +71,8 @@ export default function CheckoutPage() {
       const res = await createOrder({
         customerInfo: shippingData,
         items,
-        total
+        total,
+        paymentGateway, // Send selected gateway to backend
       });
       
       if (res.success) {
@@ -82,6 +86,11 @@ export default function CheckoutPage() {
       alert("Error placing order.");
     }
     setIsPlacingOrder(false);
+  };
+
+  const handleMockPaymentSuccess = (details) => {
+    // In a real integration, you would verify the payment details on the server here
+    setStep(3); // Move to review step automatically
   };
 
   if (isSuccess) {
@@ -198,35 +207,56 @@ export default function CheckoutPage() {
 
             {/* Step 2: Payment */}
             {step === 2 && (
-              <form onSubmit={submitPayment} className="checkout-form-section fade-in">
-                <h2 className="checkout-section-title">Payment Details</h2>
-                <div className="form-grid">
-                  <div className="form-group col-span-2">
-                    <label htmlFor="cardNumber">Card Number</label>
-                    <input type="text" id="cardNumber" name="cardNumber" placeholder="0000 0000 0000 0000" maxLength="19" required value={paymentData.cardNumber} onChange={handlePaymentChange} />
-                  </div>
-                  <div className="form-group col-span-2">
-                    <label htmlFor="cardName">Name on Card</label>
-                    <input type="text" id="cardName" name="cardName" required value={paymentData.cardName} onChange={handlePaymentChange} />
-                  </div>
-                  <div className="form-group col-span-1">
-                    <label htmlFor="expiry">Expiry (MM/YY)</label>
-                    <input type="text" id="expiry" name="expiry" placeholder="MM/YY" maxLength="5" required value={paymentData.expiry} onChange={handlePaymentChange} />
-                  </div>
-                  <div className="form-group col-span-1">
-                    <label htmlFor="cvv">CVV</label>
-                    <input type="password" id="cvv" name="cvv" placeholder="123" maxLength="4" required value={paymentData.cvv} onChange={handlePaymentChange} />
-                  </div>
-                  <div className="form-group col-span-2 checkbox-group">
-                    <input type="checkbox" id="sameAsShipping" name="sameAsShipping" checked={paymentData.sameAsShipping} onChange={handlePaymentChange} />
-                    <label htmlFor="sameAsShipping">Billing address is same as shipping</label>
-                  </div>
+              <div className="checkout-form-section fade-in">
+                <h2 className="checkout-section-title">Payment Method</h2>
+                
+                {/* Gateway Selector Tabs */}
+                <div className="flex border-b border-gray-200 mb-6">
+                  <button
+                    type="button"
+                    className={`py-3 px-6 text-sm font-medium border-b-2 transition-colors ${
+                      paymentGateway === "paypal"
+                        ? "border-[#0070ba] text-[#0070ba]"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                    onClick={() => setPaymentGateway("paypal")}
+                  >
+                    PayPal
+                  </button>
+                  <button
+                    type="button"
+                    className={`py-3 px-6 text-sm font-medium border-b-2 transition-colors ${
+                      paymentGateway === "stripe"
+                        ? "border-[#635BFF] text-[#635BFF]"
+                        : "border-transparent text-gray-500 hover:text-gray-700"
+                    }`}
+                    onClick={() => setPaymentGateway("stripe")}
+                  >
+                    Credit / Debit Card (Stripe)
+                  </button>
                 </div>
-                <div className="checkout-actions flex-between">
+
+                <div className="gateway-container min-h-[300px]">
+                  {paymentGateway === "paypal" && (
+                    <PayPalButtonPlaceholder 
+                      amount={total} 
+                      onSuccess={handleMockPaymentSuccess} 
+                    />
+                  )}
+
+                  {paymentGateway === "stripe" && (
+                    <StripePlaceholder 
+                      amount={total} 
+                      onSuccess={handleMockPaymentSuccess} 
+                    />
+                  )}
+                </div>
+
+                <div className="checkout-actions flex-between mt-6 pt-6 border-t border-gray-100">
                   <button type="button" className="btn btn-ghost" onClick={() => setStep(1)}>Back to Shipping</button>
-                  <button type="submit" className="btn btn-rainbow">Review Order</button>
+                  <button type="button" className="btn btn-rainbow" onClick={() => setStep(3)}>Skip to Review (Dev Only)</button>
                 </div>
-              </form>
+              </div>
             )}
 
             {/* Step 3: Review */}
@@ -253,8 +283,10 @@ export default function CheckoutPage() {
                     <button type="button" className="btn-edit" onClick={() => setStep(2)}>Edit</button>
                   </div>
                   <div className="review-content">
-                    <p>Card ending in {paymentData.cardNumber.slice(-4) || "****"}</p>
-                    <p>Billing: {paymentData.sameAsShipping ? "Same as shipping" : "Different address"}</p>
+                    <p className="capitalize font-medium text-gray-900">
+                      {paymentGateway === "paypal" ? "PayPal Integration" : "Credit Card (Stripe Integration)"}
+                    </p>
+                    <p className="text-gray-500 text-sm mt-1">Payment has been pre-authorized.</p>
                   </div>
                 </div>
 
