@@ -62,7 +62,7 @@ const SUBJECT_OPTIONS = [
 ];
 
 /* ─── Main Contact Page ─── */
-export default function ContactPage() {
+export default function ContactPageClient() {
   /* Form state */
   const [formData, setFormData] = useState({
     name: '',

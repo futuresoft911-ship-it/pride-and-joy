@@ -4,7 +4,7 @@ import Image from 'next/image';
 import Link from 'next/link';
 import { useCart } from '@/context/CartContext';
 
-export default function ProductCard({ product, index = 0, style }) {
+export default function ProductCard({ product, index = 0, style, priority = false }) {
   const { addToCart } = useCart();
   const {
     name,
@@ -38,7 +38,8 @@ export default function ProductCard({ product, index = 0, style }) {
             width={400}
             height={400}
             className="product-card__image"
-            loading="lazy"
+            priority={priority}
+            loading={priority ? undefined : "lazy"}
           />
           {badge && (
             <span
